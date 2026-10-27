@@ -1,0 +1,15 @@
+{
+  "name": "cursro",
+  "private": true,
+  "description": "Every official BNR exchange rate since 2005, updated daily. Free JSON and CSV API on GitHub Pages.",
+  "license": "MIT",
+  "author": "Robert-GeorgeDev",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test",
+    "update": "node scripts/update.mjs",
+    "check": "node scripts/check-data.mjs",
+    "site": "node scripts/build-site.mjs"
+  }
+}
