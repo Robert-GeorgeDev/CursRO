@@ -1,0 +1,76 @@
+name: Update rates
+
+on:
+  # BNR publishes around 13:00 Romanian time (10:00 or 11:00 UTC).
+  # The second run is a backup in case BNR publishes late.
+  schedule:
+    - cron: "17 11 * * 1-5"
+    - cron: "47 14 * * 1-5"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/**"
+      - "site/**"
+      - ".github/workflows/update.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: update-rates
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      last: ${{ steps.update.outputs.last }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - id: update
+        run: node scripts/update.mjs
+      - run: node scripts/check-data.mjs
+      - name: Commit new rates
+        env:
+          LAST: ${{ steps.update.outputs.last }}
+          ADDED: ${{ steps.update.outputs.added }}
+        run: |
+          git add data
+          if git diff --cached --quiet; then
+            echo "No new rates."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "${ADDED:-0}" -gt 20 ]; then msg="data: BNR archive up to $LAST ($ADDED days)"; else msg="data: BNR rates for $LAST"; fi
+          git commit -m "$msg"
+          git push
+
+  deploy:
+    needs: update
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: node scripts/build-site.mjs
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v5
