@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="CursRO">
+  <title>CursRO</title>
+  <g transform="rotate(-10 60 60)" fill="none" stroke="#5B3FA6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="60" cy="60" r="52" stroke-width="5"/>
+    <circle cx="60" cy="60" r="42" stroke-width="1.6"/>
+    <circle cx="60" cy="60" r="47" stroke-width="2.4" stroke-dasharray="0.1 6.052"/>
+    <path d="M37 50 H80 M70 40 L80 50 L70 60" stroke-width="7"/>
+    <path d="M83 72 H40 M50 62 L40 72 L50 82" stroke-width="7"/>
+  </g>
+</svg>

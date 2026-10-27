@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CursRO · cursul BNR din 2005 până azi</title>
+<meta name="description" content="Cursul valutar oficial BNR pentru fiecare zi din 2005 până azi. Convertor, grafic și API gratuit în JSON și CSV, actualizat zilnic.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CursRO · cursul BNR din 2005 până azi">
+<meta property="og:description" content="Convertor, grafic și API gratuit în JSON și CSV, actualizat în fiecare zi lucrătoare.">
+<meta property="og:url" content="https://robert-georgedev.github.io/CursRO/">
+<meta property="og:image" content="https://robert-georgedev.github.io/CursRO/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://robert-georgedev.github.io/CursRO/">
+<meta name="theme-color" content="#EDF1F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1728" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EDF1F5;
+    --sheet: #F8FAFC;
+    --ink: #13203B;
+    --ink-2: #4A5873;
+    --rule: #C9D3E0;
+    --accent: #5B3FA6;
+    --accent-soft: #E6E0F5;
+    --up: #1D6B45;
+    --down: #B42318;
+    --serif: "Lora", Georgia, "Times New Roman", serif;
+    --mono: "Atkinson Hyperlegible Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0F1728; --sheet: #16213A; --ink: #E7ECF4; --ink-2: #9AA8C0; --rule: #2A3756;
+      --accent: #B5A3F5; --accent-soft: #2B2550; --up: #5CCB95; --down: #FF8E80; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0F1728; --sheet: #16213A; --ink: #E7ECF4; --ink-2: #9AA8C0; --rule: #2A3756;
+    --accent: #B5A3F5; --accent-soft: #2B2550; --up: #5CCB95; --down: #FF8E80; color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 18px/1.6 var(--serif); }
+  main { max-width: 860px; margin: 0 auto; padding: 28px 20px 40px; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  /* Header */
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
+  .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--ink); }
+  .brand svg { width: 56px; height: 56px; flex: none; color: var(--accent); }
+  .brand h1 { margin: 0; font-size: 2.9rem; line-height: 1; letter-spacing: -0.02em; }
+  .star { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 1px solid var(--rule); border-radius: 999px; background: var(--sheet); color: var(--ink); text-decoration: none; font-size: 0.95rem; white-space: nowrap; }
+  .star:hover { border-color: var(--accent); }
+  .star svg { width: 16px; height: 16px; color: var(--accent); }
+  .star .count { font-family: var(--mono); color: var(--ink-2); }
+  .lede { margin: 0 0 28px; font-size: 1.2rem; color: var(--ink-2); max-width: 44ch; }
+
+  .panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 24px; }
+  h2 { font-size: 1.6rem; margin: 56px 0 12px; letter-spacing: -0.01em; }
+  .hint { color: var(--ink-2); font-size: 0.95rem; margin: 6px 0 0; }
+
+  /* Converter */
+  .convert { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; align-items: end; }
+  .field label { display: block; font-size: 0.95rem; color: var(--ink-2); margin-bottom: 6px; }
+  .amount-row { display: flex; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); overflow: hidden; }
+  .amount-row:focus-within { outline: 3px solid var(--accent); outline-offset: 0; }
+  .amount-row input { flex: 1; min-width: 0; width: 100%; border: 0; background: transparent; padding: 12px 14px; font: 1.5rem var(--mono); }
+  .amount-row input:focus { outline: none; }
+  .amount-row select, .amount-row .unit { border: 0; border-left: 1px solid var(--rule); background: var(--sheet); padding: 0 12px; font: 600 1rem var(--mono); }
+  .amount-row .unit { display: flex; align-items: center; color: var(--ink-2); }
+  .swap { width: 44px; height: 44px; margin-bottom: 4px; border: 1px solid var(--rule); border-radius: 50%; background: var(--sheet); cursor: pointer; font-size: 1.2rem; color: var(--accent); }
+  .swap:hover { background: var(--accent-soft); }
+  .result { margin: 20px 0 0; font: 600 2.2rem/1.2 var(--mono); letter-spacing: -0.01em; overflow-wrap: anywhere; }
+  .result .unit { font-size: 1.1rem; color: var(--ink-2); font-weight: 400; }
+  .rate-line { margin: 8px 0 0; color: var(--ink-2); }
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+
+  /* Chart */
+  .chart-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .chart-head select { border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); padding: 6px 10px; font: 600 1rem var(--mono); }
+  .ranges { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+  .ranges button { border: 0; background: transparent; padding: 6px 14px; cursor: pointer; font-size: 0.95rem; color: var(--ink-2); }
+  .ranges button + button { border-left: 1px solid var(--rule); }
+  .ranges button[aria-pressed="true"] { background: var(--accent); color: var(--sheet); }
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; height: 300px; touch-action: pan-y; }
+  .chart .grid { stroke: var(--rule); stroke-width: 1; }
+  .chart .axis { fill: var(--ink-2); font: 12px var(--mono); }
+  .chart .line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; }
+  .chart .area { fill: var(--accent-soft); opacity: 0.6; }
+  .chart .cursor { stroke: var(--ink-2); stroke-width: 1; stroke-dasharray: 3 3; }
+  .chart .dot { fill: var(--accent); stroke: var(--sheet); stroke-width: 2; }
+  .tip { position: absolute; top: 4px; pointer-events: none; background: var(--ink); color: var(--paper); padding: 4px 10px; border-radius: 4px; font: 0.9rem var(--mono); white-space: nowrap; transform: translateX(-50%); }
+  .tip[hidden] { display: none; }
+  .extremes { margin: 12px 0 0; color: var(--ink-2); font-size: 0.95rem; }
+
+  /* Table */
+  .table-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .table-head input { border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); padding: 8px 12px; min-width: 220px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--rule); }
+  th { font: 600 0.9rem var(--serif); color: var(--ink-2); }
+  td.r, th.r { text-align: right; }
+  td .code { font: 600 1rem var(--mono); margin-right: 10px; }
+  td .name { color: var(--ink-2); }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: var(--accent-soft); }
+
+  /* API */
+  .endpoints { list-style: none; padding: 0; margin: 12px 0; }
+  .endpoints li { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .endpoints code { font: 0.92rem var(--mono); overflow-wrap: anywhere; }
+  .endpoints .what { grid-column: 1; color: var(--ink-2); font-size: 0.95rem; }
+  .copy { font: 0.85rem var(--serif); color: var(--ink-2); background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 10px; cursor: pointer; grid-row: span 2; }
+  .copy:hover { color: var(--ink); border-color: var(--accent); }
+  pre { margin: 12px 0; padding: 16px; overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; font: 0.92rem/1.55 var(--mono); }
+
+  .notice { padding: 14px 16px; border: 1px solid var(--rule); border-radius: 6px; background: var(--sheet); color: var(--ink-2); }
+  footer { margin-top: 64px; padding-top: 18px; border-top: 1px solid var(--rule); font-size: 0.95rem; color: var(--ink-2); }
+  footer p { margin: 6px 0; }
+
+  @media (max-width: 640px) {
+    main { padding-top: 20px; }
+    .brand h1 { font-size: 2.2rem; }
+    .brand svg { width: 44px; height: 44px; }
+    .star .label { display: none; }
+    .panel { padding: 18px 14px; }
+    .convert { grid-template-columns: minmax(0, 1fr); }
+    .swap { justify-self: center; transform: rotate(90deg); margin: 0; }
+    .result { font-size: 1.8rem; }
+    .chart svg { height: 240px; }
+    .table-head input { min-width: 0; width: 100%; }
+    td .name { display: block; font-size: 0.9rem; }
+    .hide-sm { display: none; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 120 120">
+    <g transform="rotate(-10 60 60)" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="60" cy="60" r="52" stroke-width="5"/>
+      <circle cx="60" cy="60" r="42" stroke-width="1.6"/>
+      <circle cx="60" cy="60" r="47" stroke-width="2.4" stroke-dasharray="0.1 6.052"/>
+      <path d="M37 50 H80 M70 40 L80 50 L70 60" stroke-width="7"/>
+      <path d="M83 72 H40 M50 62 L40 72 L50 82" stroke-width="7"/>
+    </g>
+  </symbol>
+  <symbol id="star-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></symbol>
+</svg>
+
+<main>
+  <header class="top">
+    <a class="brand" href="./" aria-label="CursRO, pagina principală">
+      <svg aria-hidden="true"><use href="#mark"/></svg>
+      <h1>CursRO</h1>
+    </a>
+    <a class="star" href="https://github.com/Robert-GeorgeDev/CursRO" aria-label="Dă o steluță pe GitHub">
+      <svg aria-hidden="true"><use href="#star-icon"/></svg>
+      <span class="label">Steluță pe GitHub</span>
+      <span class="count" id="stars" hidden></span>
+    </a>
+  </header>
+
+  <p class="lede">Cursul oficial BNR pentru fiecare zi din 2005 până azi, cu un API gratuit în JSON și CSV.</p>
+
+  <div id="loading" class="notice" role="status">Se încarcă cursul…</div>
+
+  <div id="app" hidden>
+    <section class="panel" aria-labelledby="convert-title">
+      <h2 id="convert-title" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Convertor</h2>
+      <div class="convert">
+        <div class="field">
+          <label for="amount" id="from-label">Ai</label>
+          <div class="amount-row">
+            <input id="amount" inputmode="decimal" autocomplete="off" value="100" aria-describedby="rate-line">
+            <select id="from-cur" aria-label="Moneda de schimbat"></select>
+            <span class="unit" id="from-ron" hidden>RON</span>
+          </div>
+        </div>
+        <button class="swap" id="swap" type="button" aria-label="Inversează direcția">⇄</button>
+        <div class="field">
+          <label id="to-label">Primești</label>
+          <div class="amount-row">
+            <span class="unit" style="border-left:0;flex:1;justify-content:flex-start;padding:12px 14px;font:1.5rem var(--mono)" id="to-preview" aria-hidden="true">—</span>
+            <span class="unit" id="to-ron">RON</span>
+            <select id="to-cur" aria-label="Moneda primită" hidden></select>
+          </div>
+        </div>
+      </div>
+      <p class="result num" id="result" aria-live="polite"></p>
+      <p class="rate-line" id="rate-line"></p>
+    </section>
+
+    <section aria-labelledby="chart-title">
+      <h2 id="chart-title">Evoluția cursului</h2>
+      <div class="panel">
+        <div class="chart-head">
+          <label><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Moneda</span><select id="chart-cur"></select></label>
+          <div class="ranges" role="group" aria-label="Perioada">
+            <button type="button" data-range="31" aria-pressed="false">1 lună</button>
+            <button type="button" data-range="365" aria-pressed="true">1 an</button>
+            <button type="button" data-range="1826" aria-pressed="false">5 ani</button>
+            <button type="button" data-range="0" aria-pressed="false">Tot</button>
+          </div>
+        </div>
+        <div class="chart" id="chart">
+          <svg id="chart-svg" role="img"></svg>
+          <div class="tip" id="tip" hidden></div>
+        </div>
+        <p class="extremes" id="extremes"></p>
+      </div>
+    </section>
+
+    <section aria-labelledby="table-title">
+      <h2 id="table-title">Toate monedele</h2>
+      <div class="table-head">
+        <p class="hint" id="table-date" style="margin:0"></p>
+        <input id="filter" type="search" placeholder="Caută o monedă" aria-label="Caută o monedă" autocomplete="off">
+      </div>
+      <table>
+        <thead><tr><th>Moneda</th><th class="r">Lei pentru 1 unitate</th><th class="r hide-sm">Față de ziua anterioară</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <p class="hint">Apasă pe o monedă ca s-o vezi în convertor și pe grafic.</p>
+    </section>
+  </div>
+
+  <section aria-labelledby="api-title">
+    <h2 id="api-title">API gratuit</h2>
+    <p>Fișiere statice, fără cheie și fără limită de cereri. Se actualizează în fiecare zi lucrătoare, după ce BNR publică cursul.</p>
+    <ul class="endpoints" id="endpoints"></ul>
+    <pre><code>const res = await fetch("https://robert-georgedev.github.io/CursRO/data/latest.json");
+const { date, rates } = await res.json();
+console.log(`1 EUR = ${rates.EUR} lei (${date})`);</code></pre>
+  </section>
+
+  <footer>
+    <p>Sursa datelor: <a href="https://www.bnr.ro">Banca Națională a României</a>. CursRO nu este afiliat BNR; pentru valori oficiale, verifică bnr.ro.</p>
+    <p><a href="https://github.com/Robert-GeorgeDev/CursRO">Codul sursă pe GitHub</a> · licență MIT pentru cod</p>
+  </footer>
+</main>
+
+<script type="module">
+  const BASE = new URL("./data/", location.href);
+  const PUBLIC = "https://robert-georgedev.github.io/CursRO/data/";
+  const NAMES = {
+    AED: "dirham emiratez", AUD: "dolar australian", BGN: "leva bulgărească", BRL: "real brazilian", CAD: "dolar canadian",
+    CHF: "franc elvețian", CNY: "yuan chinezesc", CZK: "coroană cehă", DKK: "coroană daneză", EGP: "liră egipteană",
+    EUR: "euro", GBP: "liră sterlină", HKD: "dolar Hong Kong", HRK: "kuna croată", HUF: "forint maghiar", IDR: "rupie indoneziană",
+    ILS: "shekel israelian", INR: "rupie indiană", ISK: "coroană islandeză", JPY: "yen japonez", KRW: "won sud-coreean",
+    MDL: "leu moldovenesc", MXN: "peso mexican", MYR: "ringgit malaezian", NOK: "coroană norvegiană", NZD: "dolar neozeelandez",
+    PHP: "peso filipinez", PLN: "zlot polonez", RSD: "dinar sârbesc", RUB: "rublă rusească", SEK: "coroană suedeză",
+    SGD: "dolar Singapore", THB: "baht thailandez", TRY: "liră turcească", UAH: "grivnă ucraineană", USD: "dolar american",
+    XAU: "gram de aur", XDR: "drepturi speciale de tragere (FMI)", ZAR: "rand sud-african",
+  };
+  const PINNED = ["EUR", "USD", "GBP", "CHF"];
+  const MONTHS = ["ianuarie", "februarie", "martie", "aprilie", "mai", "iunie", "iulie", "august", "septembrie", "octombrie", "noiembrie", "decembrie"];
+  const SHORT_MONTHS = ["ian", "feb", "mar", "apr", "mai", "iun", "iul", "aug", "sep", "oct", "noi", "dec"];
+
+  const $ = (id) => document.getElementById(id);
+  const nf = (max = 4, min = 0) => new Intl.NumberFormat("ro-RO", { maximumFractionDigits: max, minimumFractionDigits: min });
+  const rateFmt = (v) => nf(v < 0.1 ? 6 : 4, v < 0.1 ? 4 : 4).format(v);
+  const longDate = (d) => `${Number(d.slice(8, 10))} ${MONTHS[Number(d.slice(5, 7)) - 1]} ${d.slice(0, 4)}`;
+  const name = (code) => NAMES[code] ?? code;
+
+  const state = { latest: null, from: "EUR", toRon: true, chartCur: "EUR", range: 365, series: {} };
+
+  async function getJson(path) {
+    const res = await fetch(new URL(path, BASE));
+    if (!res.ok) throw new Error(`${res.status} ${path}`);
+    return res.json();
+  }
+
+  function sortedCodes() {
+    const codes = Object.keys(state.latest.rates);
+    return [...PINNED.filter((c) => codes.includes(c)), ...codes.filter((c) => !PINNED.includes(c)).sort()];
+  }
+
+  function fillSelect(select, selected) {
+    select.replaceChildren(...sortedCodes().map((c) => new Option(`${c}`, c, false, c === selected)));
+  }
+
+  function parseAmount(raw) {
+    const cleaned = raw.trim().replace(/\s/g, "");
+    // Accept both 1.234,56 and 1234.56
+    const normalized = /,\d{1,2}$/.test(cleaned) || (cleaned.includes(",") && !cleaned.includes(".")) ? cleaned.replace(/\./g, "").replace(",", ".") : cleaned.replace(/,/g, "");
+    const n = Number(normalized);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function renderConverter() {
+    const { latest } = state;
+    const code = state.from;
+    const rate = latest.rates[code];
+    const amount = parseAmount($("amount").value);
+    $("from-cur").hidden = !state.toRon;
+    $("from-ron").hidden = state.toRon;
+    $("to-ron").hidden = !state.toRon;
+    $("to-cur").hidden = state.toRon;
+
+    let text = "—";
+    if (amount === null) {
+      $("result").textContent = "Scrie o sumă, de exemplu 100 sau 1.250,50.";
+    } else {
+      const value = state.toRon ? amount * rate : amount / rate;
+      const unit = state.toRon ? "lei" : code;
+      text = nf(2, 2).format(value);
+      const fromUnit = state.toRon ? code : "lei";
+      $("result").innerHTML = "";
+      $("result").append(`${nf(2).format(amount)} ${fromUnit} = ${text} `);
+      const u = document.createElement("span");
+      u.className = "unit";
+      u.textContent = unit;
+      $("result").append(u);
+    }
+    $("to-preview").textContent = text;
+    if (!state.toRon) $("to-cur").value = code;
+
+    const prev = latest.previous?.rates?.[code];
+    const line = $("rate-line");
+    line.replaceChildren(`Curs BNR din ${longDate(latest.date)}: 1 ${code} = ${rateFmt(rate)} lei`);
+    if (prev) {
+      const pct = ((rate - prev) / prev) * 100;
+      const span = document.createElement("span");
+      span.className = pct > 0 ? "up" : pct < 0 ? "down" : "";
+      span.textContent = `${pct > 0 ? "+" : ""}${nf(2, 2).format(pct)}%`;
+      line.append(", ", span, ` față de ${longDate(latest.previous.date)}.`);
+    } else line.append(".");
+  }
+
+  function renderTable() {
+    const { latest } = state;
+    const q = $("filter").value.trim().toLowerCase();
+    $("table-date").textContent = `Curs BNR din ${longDate(latest.date)}`;
+    const rows = sortedCodes()
+      .filter((c) => !q || c.toLowerCase().includes(q) || name(c).toLowerCase().includes(q))
+      .map((c) => {
+        const tr = document.createElement("tr");
+        tr.tabIndex = 0;
+        const rate = latest.rates[c];
+        const prev = latest.previous?.rates?.[c];
+        const pct = prev ? ((rate - prev) / prev) * 100 : null;
+        tr.innerHTML = `<td><span class="code"></span><span class="name"></span></td><td class="r num"></td><td class="r num hide-sm"></td>`;
+        tr.querySelector(".code").textContent = c;
+        tr.querySelector(".name").textContent = name(c);
+        tr.children[1].textContent = rateFmt(rate);
+        const change = tr.children[2];
+        change.textContent = pct === null ? "—" : `${pct > 0 ? "+" : ""}${nf(2, 2).format(pct)}%`;
+        if (pct) change.className += pct > 0 ? " up" : " down";
+        const pick = () => selectCurrency(c, true);
+        tr.addEventListener("click", pick);
+        tr.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+        return tr;
+      });
+    $("rows").replaceChildren(...rows);
+    if (!rows.length) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="3">Nicio monedă nu se potrivește cu „<span></span>”.</td>`;
+      tr.querySelector("span").textContent = $("filter").value;
+      $("rows").append(tr);
+    }
+  }
+
+  async function loadSeries(code) {
+    if (!state.series[code]) state.series[code] = (await getJson(`currencies/${code}.json`)).rates;
+    return state.series[code];
+  }
+
+  function niceTicks(min, max, count = 4) {
+    const span = max - min || Math.abs(max) || 1;
+    const step0 = span / count;
+    const mag = 10 ** Math.floor(Math.log10(step0));
+    const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= step0);
+    const ticks = [];
+    for (let v = Math.ceil(min / step) * step; v <= max + 1e-12; v += step) ticks.push(Number(v.toPrecision(10)));
+    return ticks;
+  }
+
+  async function renderChart() {
+    const code = state.chartCur;
+    const svg = $("chart-svg");
+    let all;
+    try {
+      all = await loadSeries(code);
+    } catch {
+      svg.innerHTML = "";
+      $("extremes").textContent = "Istoricul nu s-a putut încărca.";
+      return;
+    }
+    if (code !== state.chartCur) return;
+    let data = all;
+    if (state.range) {
+      const from = new Date(Date.parse(all.at(-1)[0]) - state.range * 86_400_000).toISOString().slice(0, 10);
+      data = all.filter(([d]) => d >= from);
+    }
+    if (data.length < 2) data = all.slice(-2);
+
+    const W = svg.clientWidth || 800, H = svg.clientHeight || 300;
+    const pad = { l: 56, r: 12, t: 16, b: 28 };
+    const values = data.map(([, v]) => v);
+    let min = Math.min(...values), max = Math.max(...values);
+    const margin = (max - min) * 0.08 || max * 0.01;
+    min -= margin; max += margin;
+    const t0 = Date.parse(data[0][0]), t1 = Date.parse(data.at(-1)[0]);
+    const x = (d) => pad.l + ((Date.parse(d) - t0) / (t1 - t0 || 1)) * (W - pad.l - pad.r);
+    const y = (v) => pad.t + (1 - (v - min) / (max - min)) * (H - pad.t - pad.b);
+
+    const step = Math.max(1, Math.floor(data.length / 1200));
+    const pts = data.filter((_, i) => i % step === 0 || i === data.length - 1);
+    const line = pts.map(([d, v], i) => `${i ? "L" : "M"}${x(d).toFixed(1)},${y(v).toFixed(1)}`).join("");
+    const area = `${line}L${x(pts.at(-1)[0]).toFixed(1)},${H - pad.b}L${pad.l},${H - pad.b}Z`;
+
+    const yTicks = niceTicks(min, max);
+    const years = (t1 - t0) / (365 * 86_400_000);
+    const xTicks = [];
+    const startDate = new Date(t0);
+    if (years > 2) {
+      const every = years > 12 ? 4 : years > 5 ? 2 : 1;
+      for (let yv = startDate.getUTCFullYear() + 1; Date.UTC(yv, 0, 1) <= t1; yv++) if (yv % every === 0) xTicks.push([Date.UTC(yv, 0, 1), String(yv)]);
+    } else {
+      const every = years > 0.5 ? 3 : 1;
+      const d = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth() + 1, 1));
+      for (; d.getTime() <= t1; d.setUTCMonth(d.getUTCMonth() + 1)) if (d.getUTCMonth() % every === 0) xTicks.push([d.getTime(), `${SHORT_MONTHS[d.getUTCMonth()]}${d.getUTCMonth() === 0 ? " " + d.getUTCFullYear() : ""}`]);
+    }
+    const xOf = (t) => pad.l + ((t - t0) / (t1 - t0 || 1)) * (W - pad.l - pad.r);
+    const dec = max < 0.1 ? 4 : max < 10 ? 2 : 0;
+
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.innerHTML = `
+      ${yTicks.map((v) => `<line class="grid" x1="${pad.l}" x2="${W - pad.r}" y1="${y(v)}" y2="${y(v)}"/><text class="axis" x="${pad.l - 8}" y="${y(v) + 4}" text-anchor="end">${nf(dec, dec).format(v)}</text>`).join("")}
+      ${xTicks.map(([t, label]) => `<text class="axis" x="${xOf(t)}" y="${H - 8}" text-anchor="middle">${label}</text>`).join("")}
+      <path class="area" d="${area}"/>
+      <path class="line" d="${line}"/>
+      <line class="cursor" id="cursor" y1="${pad.t}" y2="${H - pad.b}" visibility="hidden"/>
+      <circle class="dot" id="dot" r="4.5" visibility="hidden"/>`;
+
+    const lo = data.reduce((a, b) => (b[1] < a[1] ? b : a));
+    const hi = data.reduce((a, b) => (b[1] > a[1] ? b : a));
+    svg.setAttribute("aria-label", `${code} în lei, de la ${longDate(data[0][0])} la ${longDate(data.at(-1)[0])}: minim ${rateFmt(lo[1])}, maxim ${rateFmt(hi[1])}.`);
+    $("extremes").textContent = `În perioada aleasă, cel mai mic curs a fost ${rateFmt(lo[1])} lei (${longDate(lo[0])}), iar cel mai mare ${rateFmt(hi[1])} lei (${longDate(hi[0])}).`;
+
+    const tip = $("tip"), cursor = svg.querySelector("#cursor"), dot = svg.querySelector("#dot");
+    const show = (clientX) => {
+      const rect = svg.getBoundingClientRect();
+      const px = ((clientX - rect.left) / rect.width) * W;
+      const t = t0 + ((px - pad.l) / (W - pad.l - pad.r)) * (t1 - t0);
+      let lo2 = 0, hi2 = data.length - 1;
+      while (hi2 - lo2 > 1) { const mid = (lo2 + hi2) >> 1; (Date.parse(data[mid][0]) < t ? (lo2 = mid) : (hi2 = mid)); }
+      const [d, v] = Math.abs(Date.parse(data[lo2][0]) - t) < Math.abs(Date.parse(data[hi2][0]) - t) ? data[lo2] : data[hi2];
+      const cx = x(d), cy = y(v);
+      cursor.setAttribute("x1", cx); cursor.setAttribute("x2", cx); cursor.setAttribute("visibility", "visible");
+      dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("visibility", "visible");
+      tip.hidden = false;
+      tip.textContent = `${longDate(d)}: ${rateFmt(v)} lei`;
+      const left = (cx / W) * rect.width;
+      tip.style.left = `${Math.min(Math.max(left, tip.offsetWidth / 2), rect.width - tip.offsetWidth / 2)}px`;
+    };
+    const hide = () => { tip.hidden = true; cursor.setAttribute("visibility", "hidden"); dot.setAttribute("visibility", "hidden"); };
+    svg.onpointermove = (e) => show(e.clientX);
+    svg.onpointerdown = (e) => show(e.clientX);
+    svg.onpointerleave = hide;
+  }
+
+  function selectCurrency(code, scroll) {
+    state.from = code;
+    state.chartCur = code;
+    $("from-cur").value = code;
+    $("to-cur").value = code;
+    $("chart-cur").value = code;
+    renderConverter();
+    renderChart();
+    if (scroll) document.querySelector(".panel").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  }
+
+  function renderEndpoints() {
+    const d = state.latest?.date ?? "2026-10-27";
+    const items = [
+      ["latest.json", "Cursul ultimei zile, plus ziua anterioară"],
+      ["currencies/EUR.json", "Istoricul complet al unei monede (înlocuiește EUR cu orice cod)"],
+      [`daily/${d.slice(0, 4)}/${d}.json`, "Cursul unei zile anume"],
+      ["rates.csv", "Tot istoricul, într-un singur fișier CSV"],
+      ["index.json", "Monedele disponibile și intervalul de date"],
+    ];
+    $("endpoints").replaceChildren(...items.map(([path, what]) => {
+      const li = document.createElement("li");
+      const code = document.createElement("code");
+      code.textContent = PUBLIC + path;
+      const btn = document.createElement("button");
+      btn.className = "copy"; btn.type = "button"; btn.textContent = "Copiază";
+      btn.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(PUBLIC + path); btn.textContent = "Copiat"; } catch { btn.textContent = "Selectează manual"; }
+        setTimeout(() => (btn.textContent = "Copiază"), 1600);
+      });
+      const p = document.createElement("span");
+      p.className = "what"; p.textContent = what;
+      li.append(code, btn, p);
+      return li;
+    }));
+  }
+
+  async function start() {
+    renderEndpoints();
+    try {
+      state.latest = await getJson("latest.json");
+    } catch {
+      $("loading").textContent = "Datele nu sunt disponibile încă. Robotul le descarcă de la BNR la prima rulare; revino în câteva minute.";
+      return;
+    }
+    $("loading").hidden = true;
+    $("app").hidden = false;
+    if (!(state.from in state.latest.rates)) state.from = state.chartCur = sortedCodes()[0];
+    fillSelect($("from-cur"), state.from);
+    fillSelect($("to-cur"), state.from);
+    fillSelect($("chart-cur"), state.chartCur);
+    renderEndpoints();
+    renderConverter();
+    renderTable();
+    renderChart();
+
+    $("amount").addEventListener("input", renderConverter);
+    $("from-cur").addEventListener("change", (e) => selectCurrency(e.target.value));
+    $("to-cur").addEventListener("change", (e) => selectCurrency(e.target.value));
+    $("chart-cur").addEventListener("change", (e) => { state.chartCur = e.target.value; renderChart(); });
+    $("swap").addEventListener("click", () => { state.toRon = !state.toRon; renderConverter(); });
+    $("filter").addEventListener("input", renderTable);
+    document.querySelectorAll(".ranges button").forEach((b) => b.addEventListener("click", () => {
+      state.range = Number(b.dataset.range);
+      document.querySelectorAll(".ranges button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      renderChart();
+    }));
+    let resizeTimer;
+    addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderChart, 150); });
+
+    fetch("https://api.github.com/repos/Robert-GeorgeDev/CursRO")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d && typeof d.stargazers_count === "number") { $("stars").textContent = d.stargazers_count.toLocaleString("ro-RO"); $("stars").hidden = false; } })
+      .catch(() => {});
+  }
+
+  start();
+</script>
+</body>
+</html>
