@@ -1,0 +1,24 @@
+name: Wrong or missing rate
+description: A rate differs from the one published by BNR, or a day is missing
+labels: ["data"]
+body:
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      placeholder: "2026-10-27"
+    validations:
+      required: true
+  - type: input
+    id: currency
+    attributes:
+      label: Currency
+      placeholder: "EUR"
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Value in CursRO and value on bnr.ro
+    validations:
+      required: true
