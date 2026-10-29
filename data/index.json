@@ -2,19 +2,19 @@
   "source": "Banca Națională a României (https://www.bnr.ro)",
   "base": "RON",
   "first": "2005-01-03",
-  "last": "2026-10-28",
-  "days": 5508,
+  "last": "2026-10-29",
+  "days": 5509,
   "currencies": [
     {
       "code": "AED",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "AUD",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
@@ -26,61 +26,61 @@
     {
       "code": "BRL",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "CAD",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "CHF",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "CNY",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "CZK",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "DKK",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "EGP",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "EUR",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "GBP",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "HKD",
       "first": "2024-09-23",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
@@ -92,109 +92,109 @@
     {
       "code": "HUF",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "IDR",
       "first": "2024-09-23",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "ILS",
       "first": "2024-09-23",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "INR",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "ISK",
       "first": "2024-09-23",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "JPY",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "KRW",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "MDL",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "MXN",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "MYR",
       "first": "2024-09-23",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "NOK",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "NZD",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "PHP",
       "first": "2024-09-23",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "PLN",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "RSD",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "RUB",
       "first": "2007-11-12",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "SEK",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "SGD",
       "first": "2024-09-23",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
@@ -206,43 +206,43 @@
     {
       "code": "THB",
       "first": "2017-06-19",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "TRY",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "UAH",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "USD",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "XAU",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "XDR",
       "first": "2005-01-03",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     },
     {
       "code": "ZAR",
       "first": "2009-03-02",
-      "last": "2026-10-28",
+      "last": "2026-10-29",
       "current": true
     }
   ]
